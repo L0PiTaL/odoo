@@ -530,12 +530,13 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'uom_id' in vals:
-            new_uom = self.env['product.uom'].browse(vals['uom_id'])
-            updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
-            if done_moves:
-                raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
+        if False:
+            if 'uom_id' in vals:
+                new_uom = self.env['product.uom'].browse(vals['uom_id'])
+                updated = self.filtered(lambda template: template.uom_id != new_uom)
+                done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
+                if done_moves:
+                    raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         return super(ProductTemplate, self).write(vals)

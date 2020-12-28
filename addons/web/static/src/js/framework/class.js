@@ -86,8 +86,14 @@ OdooClass.extend = function() {
 
                         // The method only need to be bound temporarily, so
                         // we remove it when we're done executing
-                        var ret = fn.apply(this, arguments);
-                        this._super = tmp;
+                        var ret;
+                        try {
+                            ret = fn.apply(this, arguments);
+                        } finally {
+                            //We only want to keep the _super pointer correct, so
+                            //do not catch any exception, so the calling function can catch them
+                            this._super = tmp;
+                        }
 
                         return ret;
                     };
@@ -119,8 +125,16 @@ OdooClass.extend = function() {
                     return function () {
                         var tmp = this._super;
                         this._super = previous;
-                        var ret = fn.apply(this, arguments);
-                        this._super = tmp;
+
+                        var ret;
+                        try {
+                            ret = fn.apply(this, arguments);
+                        } finally {
+                            //We only want to keep the _super pointer correct, so
+                            //do not catch any exception, so the calling function can catch them
+                            this._super = tmp;
+                        }
+
                         return ret;
                     };
                 })(name, properties[name], prototype[name]);
@@ -129,8 +143,16 @@ OdooClass.extend = function() {
                     return function () {
                         var tmp = this._super;
                         this._super = _super[name];
-                        var ret = fn.apply(this, arguments);
-                        this._super = tmp;
+
+                        var ret;
+                        try {
+                            ret = fn.apply(this, arguments);
+                        } finally {
+                            //We only want to keep the _super pointer correct, so
+                            //do not catch any exception, so the calling function can catch them
+                            this._super = tmp;
+                        }
+
                         return ret;
                     };
                 })(name, properties[name]);

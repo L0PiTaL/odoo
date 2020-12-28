@@ -38,7 +38,8 @@ class ProductTemplate(models.Model):
     @api.multi
     def write(self, vals):
         #TODO: really? i don't see the reason we'd need that constraint..
-        check = self.ids and 'uom_po_id' in vals
+        #check = self.ids and 'uom_po_id' in vals
+        check = False;
         if check:
             self._cr.execute("SELECT id, uom_po_id FROM product_template WHERE id IN %s", [tuple(self.ids)])
             uoms = dict(self._cr.fetchall())
