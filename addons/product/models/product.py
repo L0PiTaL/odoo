@@ -531,8 +531,9 @@ class ProductProduct(models.Model):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller < seller.min_qty:
-                continue
+            if not self.env.context.get('seller_ignore_quantities', False):
+                if quantity_uom_seller < seller.min_qty:
+                    continue
             if seller.product_id and seller.product_id != self:
                 continue
 
